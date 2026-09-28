@@ -22,38 +22,7 @@ public class Resolver
         grid.StartCoroutine(ResolveMatches(new List<Piece>(matchs)));
 
     }
-    //private void ResolveMatches(List<Piece> matchs)
-    //{
-    //    //if (matchs.Count <= 0) return;
-    //    //grid.ClearPiece(matchs);
-    //    ScoreManager.Instance.AddScore(matchs.Count);
-    //    Sequence clearPiece = grid.ClearPiece(matchs);
-    //    clearPiece.OnComplete(() =>
-    //    {
-    //        grid.RemovePiece(matchs);
-    //        //Debug.Log("下一步下落");
-    //        Sequence dropSequence = DropSystem.DropPiece(grid.width, grid.height, grid.cellSpacing, grid.pieces);
-    //        dropSequence.OnComplete(() =>
-    //        {
-    //            //Debug.Log("下一步生成");
-    //            Sequence generateSequence = grid.GeneratePiece();
-    //            generateSequence.OnComplete(() =>
-    //            {
-    //                //连锁消除
-    //                //Debug.Log("下一步消除");
-    //                List<Piece> match = MatchSystem.CheckAllMatch(grid.pieces, grid.width, grid.height);
-    //                if (match.Count <= 0)
-    //                {
-    //                    GameManager.Instance.SetGameState(GameState.Playing);
-    //                    return;
-    //                }
-    //                //Debug.Log("重复执行");
-    //                ResolveMatches(match);
-    //            });
-    //        });
-    //    });
-    //    //Debug.Log("流程结束");
-    //}
+
     private IEnumerator ResolveMatches(List<Piece> matchs)
     {
         //if (matchs.Count <= 0) return;
