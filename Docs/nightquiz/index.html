@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#12141a">
+<title>夜班题库 · 9/13</title>
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:#12141a;color:#e6e8ee;
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:16px;line-height:1.7;-webkit-text-size-adjust:100%}
+  .wrap{max-width:760px;margin:0 auto;padding:0 14px 80px}
+  header{position:sticky;top:0;z-index:10;background:rgba(18,20,26,.94);backdrop-filter:blur(8px);
+    border-bottom:1px solid #262b36;padding:12px 0 10px}
+  h1{font-size:18px;margin:0 0 2px;letter-spacing:.5px}
+  .sub{font-size:12px;color:#8b93a5}
+  .bar{height:6px;border-radius:99px;background:#262b36;margin:10px 0 8px;overflow:hidden}
+  .bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#6ea8fe,#7dd3a0);
+    border-radius:99px;transition:width .3s}
+  .tools{display:flex;gap:8px;flex-wrap:wrap}
+  .tools button{flex:1;min-width:88px;padding:9px 10px;border-radius:10px;border:1px solid #2e3542;
+    background:#1b1f27;color:#c9cfdc;font-size:13px;font-family:inherit}
+  .tools button.on{border-color:#6ea8fe;color:#cfe1ff;background:#1d2634}
+  .card{background:#1b1f27;border:1px solid #262b36;border-radius:14px;padding:15px 15px 13px;margin:14px 0}
+  .card.ok{border-color:#2f6b4a;background:#182420}
+  .head{display:flex;align-items:center;gap:9px;margin-bottom:9px;flex-wrap:wrap}
+  .num{width:26px;height:26px;flex:0 0 26px;border-radius:8px;background:#232a36;color:#9fb0cd;
+    font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .card.ok .num{background:#245b3d;color:#b8f0cf}
+  .tag{font-size:11px;padding:3px 8px;border-radius:99px;background:#20304a;color:#a9c6f5}
+  .topic{font-size:11.5px;color:#7f8798}
+  p{margin:8px 0}
+  b{color:#fff}
+  code{background:#0e1015;border:1px solid #262b36;border-radius:5px;padding:1px 5px;
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;color:#f0c98a;word-break:break-word}
+  pre{margin:10px 0;background:#0e1015;border:1px solid #262b36;border-radius:10px;padding:12px 13px;
+    overflow-x:auto;-webkit-overflow-scrolling:touch}
+  pre code{background:none;border:none;padding:0;color:#cfd6e4;font-size:13px;line-height:1.6;white-space:pre}
+  ul{margin:8px 0;padding-left:20px}
+  li{margin:5px 0}
+  .ans{margin-top:12px;border-top:1px dashed #333a48;padding-top:11px;display:none}
+  .ans.show{display:block}
+  .ans .lbl{font-size:12px;color:#7dd3a0;letter-spacing:1px;margin-bottom:6px}
+  .acts{display:flex;gap:8px;margin-top:12px}
+  .acts button{flex:1;padding:10px;border-radius:10px;border:1px solid #2e3542;background:#232a36;
+    color:#c9cfdc;font-size:13.5px;font-family:inherit}
+  .acts .reveal{border-color:#3a4a66;color:#cfe1ff}
+  .card.ok .mark{border-color:#2f6b4a;background:#1e3a2c;color:#b8f0cf}
+  .hint{background:#171b23;border:1px solid #262b36;border-radius:12px;padding:12px 14px;margin:14px 0;
+    font-size:13.5px;color:#a8b1c2}
+  .hint b{color:#e6e8ee}
+  footer{text-align:center;color:#5d6472;font-size:12px;margin-top:26px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>夜班题库 · 9/13</h1>
+    <div class="sub">覆盖 9/10 – 9/13 · 全部出自你自己的项目</div>
+    <div class="bar"><i id="prog"></i></div>
+    <div class="tools">
+      <button id="f-all" class="on">全部 13 题</button>
+      <button id="f-todo">只看没掌握的</button>
+      <button id="f-reset">重置标记</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hint">
+    <b>怎么用：</b>一晚 2~3 题。先在纸上写出答案（写不出就写"不知道"），再点「看答案」。
+    对不上的那题点「再看」，第二天截图发我。<b>不许开 Unity 验证</b>——这组题练的就是在脑子里执行代码。
+  </div>
+  <div id="list"></div>
+  <footer>对不上的那几题，才是你今晚真正的收获。</footer>
+</main>
+
+<script>
+const KEY = 'nightquiz-0913';
+
+const DATA = [
+{
+  n:1, tag:'预测输出', topic:'值类型 / 引用类型',
+  body:[
+    {t:'p',v:'下面这段代码执行完之后，<code>pieces[0,0]</code> 和 <code>pieces[1,0]</code> 变了吗？为什么？'},
+    {t:'c',v:`void Swap(Piece a, Piece b)
+{
+    Piece temp = a;
+    a = b;
+    b = temp;
+}
+
+Piece p1 = pieces[0, 0];
+Piece p2 = pieces[1, 0];
+Swap(p1, p2);`},
+    {t:'p',v:'提示：<code>Piece</code> 是 <code>class</code>。但答案不是"因为是引用类型所以变了"。'}
+  ],
+  ans:[
+    {t:'p',v:'<b>都没变。</b>'},
+    {t:'p',v:'<code>a = b</code> 只是把手里那个<b>遥控器的复印件</b>扔了、换了一个 —— 外面那两个变量指着的东西一动没动。<code>pieces[0,0]</code> 从头到尾还指着 <code>p1</code>。'},
+    {t:'p',v:'<b>判据：赋值改的是"指向"，方法改的是"对象"。</b>只有调 <code>SetPos</code> / <code>Add</code> 这类方法时，外面才看得见。'}
+  ]
+},
+{
+  n:2, tag:'找茬', topic:'集合 · foreach',
+  body:[
+    {t:'p',v:'这段代码想做的事是"遍历方块列表，把已消除的方块从列表里删掉"：'},
+    {t:'c',v:`public void RemovePiece(List<Piece> matchs)
+{
+    foreach (Piece piece in matchs)
+    {
+        if (pieces[piece.x, piece.y] == null) continue;
+        pieces[piece.x, piece.y] = null;
+        Destroy(piece.gameObject);
+        matchs.Remove(piece);
+    }
+}`},
+    {t:'p',v:'问：这里有几个问题？（至少找到 2 个）'}
+  ],
+  ans:[
+    {t:'p',v:'<b>🔴 1. <code>foreach</code> 里 <code>matchs.Remove(piece)</code></b> → 抛 <code>InvalidOperationException: Collection was modified</code>。遍历时不能改集合。'},
+    {t:'p',v:'<b>🔴 2. 遍历的集合和修改的集合是同一个。</b>你的项目之所以没炸，是因为遍历 <code>matchs</code>、改的是 <code>pieces</code> —— 两个不同的集合。哪天写成"遍历 pieces 顺手删"，立刻撞上这个异常。'},
+    {t:'p',v:'<b>🟠 3. 语法</b>：<code>piece.x</code> / <code>piece.y</code> 是字段访问，不是方法 —— 写成 <code>piece.x()</code> 编译不过。'},
+    {t:'p',v:'<b>✅ 4. 那句 <code>if (pieces[...] == null) continue;</code> 是必要的守卫</b>（防"洞"），这条是对的，别一起删掉。'},
+    {t:'p',v:'<b>正解：</b>先收集要删的，循环结束后统一删；或者用倒序 <code>for</code> 删。'}
+  ]
+},
+{
+  n:3, tag:'预测输出', topic:'协程 · Destroy 时机',
+  body:[
+    {t:'c',v:`IEnumerator Test()
+{
+    Piece p = grid.GetPiece(0, 0);
+    p.transform.DOScale(0f, 0.2f);
+    grid.RemovePiece(list);   // 里面有 Destroy(p.gameObject)
+    yield return new WaitForSeconds(0.5f);
+    Debug.Log("结束");
+}`},
+    {t:'p',v:'问：① 你会看到方块<b>缩小消失</b>，还是<b>凭空消失</b>？② Console 里会出现什么？（报错原文里其实已经包含答案）③ <code>RemovePiece</code> 该挪到哪一行？'}
+  ],
+  ans:[
+    {t:'p',v:'<b>① 凭空消失</b> —— 没有任何缩小动画。'},
+    {t:'p',v:'<b>②</b> DOTween 会报：'},
+    {t:'c',v:`Tween startup failed (NULL target/property -); the tween will now be killed
+The object of type 'Transform' has been destroyed. Your script should either
+check if it is null or you should not destroy the object.`},
+    {t:'p',v:'<b>"you should not destroy the object"</b> —— 报错原文就是答案。'},
+    {t:'p',v:'<b>③</b> 挪到 <code>yield return ...</code> <b>之后</b>。'},
+    {t:'p',v:'<b>两个机制合起来才成立：</b><code>Destroy</code> 只是<b>标记</b>，真正销毁在<b>当帧结束时</b>；而 DOTween 的 tween 创建后要等<b>下一个 Update</b> 才启动。同一帧里先建 tween、再 <code>Destroy</code> → 下一帧启动时 target 已经是 null。'}
+  ]
+},
+{
+  n:4, tag:'找茬', topic:'执行时机 · 创建 vs 结束',
+  body:[
+    {t:'p',v:'这是你 9/10 写过的一版。它能编译、能跑，但<b>什么都不发生</b>：'},
+    {t:'c',v:`Sequence clearPiece = grid.ClearPiece(matchs);
+Sequence dropSequence = DropSystem.DropPiece(grid.width, grid.height, grid.cellSpacing, grid.pieces);
+Sequence generateSequence = grid.GeneratePiece();
+yield return clearPiece.WaitForCompletion();
+grid.RemovePiece(matchs);
+yield return dropSequence.WaitForCompletion();
+yield return generateSequence.WaitForCompletion();`},
+    {t:'p',v:'现象：<b>匹配的方块缩小消失了，然后整个棋盘静止，什么都不掉、什么都不补。</b>'},
+    {t:'p',v:'问：① 为什么方块不掉下来？② 为什么一个新方块都不生成？③ 要修的话，规则是什么？'}
+  ],
+  ans:[
+    {t:'p',v:'<b>① 不掉：</b><code>DropPiece</code> 在你<b>调用它的那一刻</b>就遍历数组找空洞 —— 但那时 <code>RemovePiece</code> 还没跑，数组里那三个方块<b>还在</b>，找不到任何洞 → 返回一个<b>空 Sequence</b>。'},
+    {t:'p',v:'<b>② 不生成：</b>同理，<code>GeneratePiece</code> 调用时数组里<b>没有 null</b> → 一个都不生成。'},
+    {t:'p',v:'<b>③ 规则：每一步的"创建"必须发生在上一步真正结束之后。</b>原来的三层 <code>OnComplete</code> 虽然难读，但它把"时机"和"位置"绑在一起了；拍成直线时位置对了、时机丢了。'},
+    {t:'p',v:'补充：<code>DOTween.Sequence()</code> 一创建就开始播放，不需要手写 <code>.Play()</code>。'}
+  ]
+},
+{
+  n:5, tag:'猜病因', topic:'debug · 报错行 ≠ 病因行',
+  body:[
+    {t:'c',v:`TextAsset json = Resources.Load<TextAsset>("Json/data");                                        // 第 31 行
+questionList = JsonUtility.FromJson<QuestionList>("{\\"questions\\":" + json.text + "}").questions;  // 第 32 行`},
+    {t:'p',v:'实际文件夹叫 <code>JSON</code>，不是 <code>Json</code>。'},
+    {t:'p',v:'问：① 哪一行会崩？报什么错？② 报错信息里会出现"文件"这个词吗？③ 新手最容易在这里浪费多少时间、浪费在查什么上？④ 加哪几行能让排查从两小时变成三秒？'}
+  ],
+  ans:[
+    {t:'p',v:'<b>① 第 32 行崩</b>，报 <code>NullReferenceException</code>。因为 <code>Resources.Load</code> 找不到文件时<b>不报错，只是返回 null</b>，然后 <code>json.text</code> 空引用。'},
+    {t:'p',v:'<b>② 不会。</b>报错里完全没有"文件"两个字，只有 <code>NullReferenceException</code>。'},
+    {t:'p',v:'<b>③</b> 新手会死盯第 32 行，反复查 <code>JsonUtility.FromJson</code> 的语法、检查 JSON 格式 —— <b>1~2 小时，方向完全错</b>。'},
+    {t:'p',v:'<b>④ 判空 + 明确报错：</b>'},
+    {t:'c',v:`if (json == null)
+{
+    Debug.LogError("题库文件没找到！检查 Resources/JSON/data.json");
+    return;
+}`},
+    {t:'p',v:'<b>报错的位置 ≠ 出错的位置。</b>防御性代码不是给程序看的，是给未来的你自己看的。'}
+  ]
+},
+{
+  n:6, tag:'一句话原理', topic:'存档 · 为什么不能存 asset',
+  body:[
+    {t:'p',v:'<code>GameSaveData</code> 里原来是 <code>public PieceData style;</code>，被改成了存皮肤名字的字符串。'},
+    {t:'p',v:'问：<b>为什么不能直接存 <code>PieceData</code>？</b>说两条理由，第二条要提到 <code>PieceStyle</code> 里面的一个字段。'}
+  ],
+  ans:[
+    {t:'p',v:'<b>① 存档是一段文本，文本只能装下"身份"（名字），装不下"内容"（整个资产）。</b>硬塞进去，读回来也只是一个崭新的、跟你的 Assets 再无关系的对象。'},
+    {t:'p',v:'<b>② <code>PieceStyle</code> 里有一个 <code>Sprite</code> 字段，它也是 asset 引用。</b>序列化时只能写进一个 instanceID —— 这个编号只在本次运行/当前编辑器里有效，下次打开指向的东西就变了。'},
+    {t:'p',v:'结果：<b>读档成功、Console 干净、分数和棋盘都对，但所有方块变白块或花屏。</b>又一个"不报错的 bug"。'}
+  ]
+},
+{
+  n:7, tag:'找茬', topic:'你的招牌病',
+  body:[
+    {t:'c',v:`public void BackHomePanel()
+{
+    UIManager.Instance.ShowMainPanel();
+    if (gameState != GameState.Playing) return;
+    SaveManager.Instance.SaveData(gridManager);
+    gridManager.ClearAllPiece();
+}`},
+    {t:'p',v:'需求：游戏内返回按钮 → 存档 + 清场；皮肤界面返回按钮 → 什么都不做。'},
+    {t:'p',v:'问：① 连锁过程中（<code>gameState == Resolving</code>）点"返回主菜单"，会发生什么（说两步后果）？② <b>根因不是"早退写在了前面"</b>，根因是什么？③ 这个病在你项目里还出现过至少 3 次，能想出哪几次？'}
+  ],
+  ans:[
+    {t:'p',v:'<b>①</b> 不存档 → 不清场 → 旧棋子全留在场上；回主菜单再点"新游戏"，<code>InitGrid()</code> 里 <code>pieces = new Piece[width,height]</code> 直接覆盖引用 → 旧棋子变成孤儿 → <b>两套棋叠在一起</b>。'},
+    {t:'p',v:'<b>② 根因是一个变量回答了两个问题：</b><code>gameState</code> 同时被用来判断"该显示哪个面板"和"该不该存档"。而这两个问题的答案集合<b>并不一一对应</b>（<code>Resolving</code> 时玩家明明在游戏里，却被判成"非 Playing = 皮肤界面"）。'},
+    {t:'p',v:'<b>③</b> ① Resolver 旧版用 <code>matchs</code> 和 <code>match</code> 两个变量表达"还有没有匹配"，用 <code>||</code> 把不确定包起来；② 想再开一个 <code>PieceState[,]</code> 数组存特殊块状态（同一事实的双数组）；③ 想问"是不是该写 <code>x &gt; 2</code>"来兜住"不确定是 1 还是 2"。'},
+    {t:'p',v:'<b>统一判据：两个变量 / 数组 / 对象表达同一个意思 → 停下来。</b><code>||</code> 和 <code>if</code> 不是解法，是把 bug 藏得更深。'}
+  ]
+},
+{
+  n:8, tag:'推理', topic:'存盘时机 · 检查点',
+  body:[
+    {t:'p',v:'现在存盘点有三处：<code>QuitToMainMenu()</code>、<code>Resolver</code> 协程跑完（连锁结束）、<code>GridManager</code> 交换失败弹回去之后。'},
+    {t:'p',v:'问：① 为什么这三处<b>都不需要额外判断</b>"棋盘是否静止"？② 如果在 <code>ClearPiece</code> 的缩放动画还在播时存盘，会存出什么数据？读回来会怎样？③ 加检查点之后，<b>丢数据的窗口还剩多大</b>？'}
+  ],
+  ans:[
+    {t:'p',v:'<b>①</b> 因为这三处都是 <code>gameState</code> 被置为 <code>Playing</code> 的同一时刻 —— 数组是满的、动画也停了，正好是 <code>IsBoardComplete()</code> 为 true 的时刻。'},
+    {t:'p',v:'<b>②</b> 会存出一个<b>有洞的棋盘</b>（<code>SaveData</code> 里 <code>if (piece == null) continue;</code> 会跳过硬洞，<code>LoadData</code> 只填有数据的格子）。读回来那些洞<b>永久留在场上，谁都填不上</b> —— 因为补位逻辑只在消除流程里跑。'},
+    {t:'p',v:'<b>③</b> 从"<b>整局</b>"缩到"<b>不到 1 秒的动画期间</b>"。而那 1 秒本来就存不了（数组满但动画在跑，存下去读回来会错位）。'},
+    {t:'p',v:'任何强杀（任务管理器 / 手机没电 / 崩溃）<b>都不给程序任何回调机会</b>。所以唯一可靠的办法是把<b>存盘点往前挪</b>，而不是指望退出通知。'}
+  ]
+},
+{
+  n:9, tag:'纸笔默写', topic:'协程骨架',
+  body:[
+    {t:'p',v:'关掉电脑，在纸上写出：'},
+    {t:'l',v:['一个协程方法的<b>签名</b>（返回类型是什么？）','一个 <code>while</code> 循环，每轮里依次：播放消除动画 → 等它播完 → 移除方块 → 掉落 → 等播完 → 补位 → 等播完 → 重新检测匹配','循环结束之后要做的那<b>两件事</b>']},
+    {t:'p',v:'写不出来的地方，就是你没真正记住的地方 —— 记下来发我。'}
+  ],
+  ans:[
+    {t:'p',v:'<b>① 签名：</b><code>private IEnumerator Xxx()</code> —— 返回类型是 <code>IEnumerator</code>。'},
+    {t:'p',v:'<b>② 骨架：</b>'},
+    {t:'c',v:`while (matchs.Count >= 3)
+{
+    ScoreManager.Instance.AddScore(matchs.Count);
+    Sequence clear = grid.ClearPiece(matchs);
+    yield return clear.WaitForCompletion();
+    grid.RemovePiece(matchs);
+    Sequence drop = DropSystem.DropPiece(...);
+    yield return drop.WaitForCompletion();
+    Sequence gen = grid.GeneratePiece();
+    yield return gen.WaitForCompletion();
+    matchs = MatchSystem.CheckAllMatch(grid.pieces, grid.width, grid.height);
+}`},
+    {t:'p',v:'<b>③</b> 循环结束后：<code>SetGameState(Playing)</code> 解锁 + <code>SaveCheckPoint()</code>。'},
+    {t:'p',v:'只能有<b>一个</b>循环变量 —— 写成 <code>matchs.Count &gt;= 3 || match.Count &gt;= 3</code> 就是死循环。'}
+  ]
+},
+{
+  n:10, tag:'猜病因', topic:'死锁 · 不报错的 bug',
+  body:[
+    {t:'p',v:'<code>SetGameState(GameState.Playing)</code> 原来被写在了一个 <code>if</code> 里面，而不是循环外面。'},
+    {t:'p',v:'问：① 如果这条协程在中间<b>因为任何原因中断</b>（场景切换、方块被销毁、tween 被 Kill），玩家会看到什么？② Console 里会有报错吗？③ 为什么这种 bug 比崩溃难查十倍？'}
+  ],
+  ans:[
+    {t:'p',v:'<b>① 游戏没崩、没报错、画面正常，但玩家再也点不动了。</b><code>gameState</code> 永远卡在 <code>Resolving</code>，而 <code>InputManager</code> 看到 <code>Resolving</code> 就拒绝一切点击。'},
+    {t:'p',v:'<b>② 一个字都没有。</b>这就是它最阴的地方。'},
+    {t:'p',v:'<b>③</b> 崩溃会给你行号和堆栈，<b>而"什么都不发生"什么都不给你</b> —— 你只能靠推理，而推理的前提是知道"解锁动作写在了最内层回调里"这件事本身很危险。'},
+    {t:'p',v:'<b>规则：把"解除锁定"放在异步回调的最后一步，就是在赌这条链一定不会断。</b>'}
+  ]
+},
+{
+  n:11, tag:'原理', topic:'集合 · HashSet',
+  body:[
+    {t:'p',v:'你的爆破解链里用了这个写法：'},
+    {t:'c',v:`if (pieces[x, y] != null && set.Add(pieces[x, y]))
+    queue.Enqueue(pieces[x, y]);`},
+    {t:'p',v:'问：① <code>set</code> 是什么类型？为什么不用 <code>List</code>？② <code>set.Add()</code> 返回什么类型，为什么能直接当 <code>if</code> 条件？③ 这一行同时完成了哪<b>两件事</b>？'}
+  ],
+  ans:[
+    {t:'p',v:'<b>①</b> <code>HashSet&lt;Piece&gt;</code>（从 <code>set.Add()</code> 的用法能看出来）。不用 <code>List</code> 是因为：同一个方块可能被重复波及，用 <code>List</code> 就要额外写 <code>Contains</code> 判断，而且 <code>List.Contains</code> 是 O(n)、<code>HashSet.Add</code> 是 O(1)。'},
+    {t:'p',v:'<b>②</b> 返回 <code>bool</code> —— 元素是新的返回 true，已经存在返回 false。'},
+    {t:'p',v:'<b>③</b> 同时完成了<b>去重</b>（已存在就不入队）和<b>判断是不是新元素</b>两个判断。这就是这一行比"<code>Contains</code> + <code>Add</code>"两行写法高明的地方。'}
+  ]
+},
+{
+  n:12, tag:'设计', topic:'死局检测 · 放哪 + 怎么判断',
+  body:[
+    {t:'p',v:'要给三消加"死局检测"：检查棋盘上还有没有可行的交换，没有就重排。'},
+    {t:'p',v:'问：① 这段代码<b>需要播放动画吗</b>？需要读 <code>transform</code> 吗？② 按"需要动画的进流程、不需要动画的进纯逻辑"这个判据，它该放在哪个文件？③ 它的输入参数是什么？（提示：看 <code>MatchSystem</code> 里其他方法怎么写的）'},
+    {t:'p',v:'<b>④ 判断本身怎么做？</b>玩家能做的动作只有"交换相邻两个"。你打算怎么用它来判断？'}
+  ],
+  ans:[
+    {t:'p',v:'<b>① 不需要动画、不需要 <code>transform</code>。</b>整个过程就是"遍历棋盘、试每一个相邻交换、看会不会产生三连"——纯数组操作。'},
+    {t:'p',v:'<b>② <code>MatchSystem</code></b>（它已经放着纯算法），或者单独一个 <code>DeadlockDetector</code>。<b>不能塞进 <code>GridManager</code> 的动画回调里</b> —— 那会让纯逻辑和动画绑死，以后想单独测都没法测；而且 <code>GridManager</code> 已经太重了。'},
+    {t:'p',v:'<b>③</b> 和 <code>MatchSystem</code> 其他方法保持一致：<code>(Piece[,] pieces, int width, int height)</code>，返回 <code>bool</code>。'},
+    {t:'p',v:'<b>④</b> 遍历每个格子，<b>把相邻两块换一下 → 看看会不会产生三连 → 再换回来</b>。只要有任何一次产生了三连，就"还有解"。'},
+    {t:'p',v:'<b>两个关键点：</b>'},
+    {t:'l',v:['<b>只需要试"右"和"下"两个邻居</b>，不用试左边和上边 —— 因为 <code>(x,y)</code> 和 <code>(x+1,y)</code> 的交换，会在轮到 <code>(x+1,y)</code> 试"左"的时候被重复试一次。少一半工作量。','<b>试完必须换回来。</b>这个动作和你 <code>SwapPiece</code> 的失败回退是同一个形状：交换 → 判断 → 不成立就还原。']}
+  ]
+},
+{
+  n:13, tag:'找茬 · 预演', topic:'死局检测的坑',
+  body:[
+    {t:'p',v:'下面这个死局检测能跑，但<b>它会毁掉棋盘</b>：'},
+    {t:'c',v:`public static bool HasPossibleMove(Piece[,] pieces, int width, int height)
+{
+    for (int x = 0; x < width - 1; x++)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            Piece a = pieces[x, y];
+            Piece b = pieces[x + 1, y];
+            pieces[x, y] = b;
+            pieces[x + 1, y] = a;
+            if (CheckAllMatch(pieces, width, height).Count > 0) return true;
+        }
+    }
+    return false;
+}`},
+    {t:'p',v:'问：① 漏了哪一行？② 如果第一对交换之后<b>就找到了解</b>（<code>return true</code>），棋盘会怎样？③ 这个 bug 跑起来会是什么现象？'}
+  ],
+  ans:[
+    {t:'p',v:'<b>① 漏了"换回来"。</b>循环末尾（以及 <code>return true</code> 之前）必须把 <code>a</code>、<code>b</code> 换回原位。'},
+    {t:'p',v:'<b>② 棋盘会留下一对<b>被悄悄换过位置</b>的方块。</b>数组被改乱了，但 <code>Piece.x/Piece.y</code> 没跟着改 —— 于是"数组下标 == piece 自己的 x/y"这个不变量被破坏。'},
+    {t:'p',v:'<b>③</b> 棋盘看起来没变（画面不会自己动，因为没播动画），但下一次消除会<b>消错地方</b>、掉落的方块位置全乱，而且 <code>Console</code> 里什么都没有。<b>又一个"不报错但毁数据"的 bug。</b>'},
+    {t:'p',v:'<b>所以这条方法最好的写法是"先深拷贝一份再试"</b>，或者老老实实 <code>交换 → 判断 → 换回</code> 成对出现。这也是你 Study Project 里 <code>DebugCheckBoard()</code> 那种"不变量校验"存在的意义 —— 它能当场把这种错误抓出来。'}
+  ]
+}
+];
+
+const store = JSON.parse(localStorage.getItem(KEY) || '{}');
+let filter = 'all';
+
+function save(){ localStorage.setItem(KEY, JSON.stringify(store)); }
+
+function renderBlock(b){
+  if (b.t === 'c'){
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.textContent = b.v;
+    pre.appendChild(code);
+    return pre;
+  }
+  if (b.t === 'l'){
+    const ul = document.createElement('ul');
+    (b.v || []).forEach(function(item){
+      const li = document.createElement('li');
+      li.innerHTML = item;
+      ul.appendChild(li);
+    });
+    return ul;
+  }
+  const p = document.createElement('p');
+  p.innerHTML = b.v;
+  return p;
+}
+
+function render(){
+  const list = document.getElementById('list');
+  list.innerHTML = '';
+  let shown = 0, okCount = 0;
+
+  DATA.forEach(function(q){
+    const ok = store[q.n] === 'ok';
+    if (ok) okCount++;
+    if (filter === 'todo' && ok) return;
+    shown++;
+
+    const card = document.createElement('div');
+    card.className = 'card' + (ok ? ' ok' : '');
+
+    const head = document.createElement('div');
+    head.className = 'head';
+    const num = document.createElement('div');
+    num.className = 'num'; num.textContent = q.n;
+    const tag = document.createElement('span');
+    tag.className = 'tag'; tag.textContent = q.tag;
+    const topic = document.createElement('span');
+    topic.className = 'topic'; topic.textContent = q.topic;
+    head.appendChild(num); head.appendChild(tag); head.appendChild(topic);
+    card.appendChild(head);
+
+    q.body.forEach(function(b){ card.appendChild(renderBlock(b)); });
+
+    const ans = document.createElement('div');
+    ans.className = 'ans';
+    const lbl = document.createElement('div');
+    lbl.className = 'lbl'; lbl.textContent = '答 案';
+    ans.appendChild(lbl);
+    q.ans.forEach(function(b){ ans.appendChild(renderBlock(b)); });
+    card.appendChild(ans);
+
+    const acts = document.createElement('div');
+    acts.className = 'acts';
+
+    const reveal = document.createElement('button');
+    reveal.className = 'reveal';
+    reveal.textContent = '看答案';
+    reveal.onclick = function(){
+      const open = ans.classList.toggle('show');
+      reveal.textContent = open ? '收起答案' : '看答案';
+    };
+
+    const mark = document.createElement('button');
+    mark.className = 'mark';
+    mark.textContent = ok ? '已掌握 ✓' : '再看';
+    mark.onclick = function(){
+      if (store[q.n] === 'ok'){ delete store[q.n]; } else { store[q.n] = 'ok'; }
+      save(); render();
+    };
+
+    acts.appendChild(reveal);
+    acts.appendChild(mark);
+    card.appendChild(acts);
+
+    list.appendChild(card);
+  });
+
+  document.getElementById('prog').style.width = (okCount / DATA.length * 100) + '%';
+  document.getElementById('f-all').textContent = '全部 ' + DATA.length + ' 题';
+  document.getElementById('f-todo').textContent = '只看没掌握的 (' + (DATA.length - okCount) + ')';
+  if (shown === 0){
+    const p = document.createElement('p');
+    p.className = 'hint';
+    p.innerHTML = '📗 全部掌握了。要不要点「重置标记」再来一轮？';
+    list.appendChild(p);
+  }
+}
+
+document.getElementById('f-all').onclick = function(){ filter = 'all'; this.classList.add('on');
+  document.getElementById('f-todo').classList.remove('on'); render(); };
+document.getElementById('f-todo').onclick = function(){ filter = 'todo'; this.classList.add('on');
+  document.getElementById('f-all').classList.remove('on'); render(); };
+document.getElementById('f-reset').onclick = function(){
+  if (confirm('清空所有掌握标记？')){ for (const k in store) delete store[k]; save(); render(); }
+};
+
+render();
+</script>
+</body>
+</html>
