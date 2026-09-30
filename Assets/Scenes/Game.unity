@@ -1066,7 +1066,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 519677028}
         m_TargetAssemblyTypeName: ChooseStyleUI, Assembly-CSharp
-        m_MethodName: ChangedStyle
+        m_MethodName: ChangeStyle
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 11400000, guid: 5b5d13c24a5665945b8de21c31df7725, type: 2}
@@ -1220,7 +1220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4614e74ec6d6be4a8ea90014536f18f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Camera: {fileID: 519420031}
+  ma: {fileID: 0}
   grid: {fileID: 114792030}
 --- !u!1 &519677026
 GameObject:
@@ -1989,7 +1989,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2026599326}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: ContineGame
+        m_MethodName: ContinueGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2299,7 +2299,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 519677028}
         m_TargetAssemblyTypeName: ChooseStyleUI, Assembly-CSharp
-        m_MethodName: ChangedStyle
+        m_MethodName: ChangeStyle
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 11400000, guid: d9e930b6ca1e5db42b00e40d1b091c4f, type: 2}
@@ -2571,12 +2571,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainMenuPanel: {fileID: 1343084058}
-  continueButton: {fileID: 0}
+  continueButton: {fileID: 845670927}
   scoreText: {fileID: 164904695}
   bestScoreText: {fileID: 118069961}
   chooseStylePanel: {fileID: 519677026}
-  GamePanel: {fileID: 1239201116}
-  OverPanel: {fileID: 1326684014}
+  gamePanel: {fileID: 1239201116}
+  overPanel: {fileID: 1326684014}
 --- !u!1 &1153598046
 GameObject:
   m_ObjectHideFlags: 0
@@ -3767,7 +3767,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 519677028}
         m_TargetAssemblyTypeName: ChooseStyleUI, Assembly-CSharp
-        m_MethodName: ChangedStyle
+        m_MethodName: ChangeStyle
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 11400000, guid: 7c1338b49e095fd44b870f7c48d5b2d0, type: 2}

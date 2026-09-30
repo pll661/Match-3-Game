@@ -24,7 +24,7 @@ public class ScoreManager : MonoBehaviour
     }
     private void Start()
     {
-        UpdateBestScore();
+        GetBestScoreSave();
     }
     public void AddScore(int s)
     {
@@ -45,6 +45,10 @@ public class ScoreManager : MonoBehaviour
             bestScore = score;
             SaveManager.Instance.SaveBestScore(bestScore);
         }
+    }
+    public void GetBestScoreSave()
+    {
+        bestScore = PlayerPrefs.GetInt("BESTSCORE");
     }
     public void SetScore(int s)
     {

@@ -11,7 +11,6 @@ public class GameSaveData
 {
     public int score;
     public int moves;
-    public string styleName;
     public List<BoardPieceData> piecesData=new List<BoardPieceData>();
    
 }

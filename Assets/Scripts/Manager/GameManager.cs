@@ -82,14 +82,14 @@ public class GameManager : MonoBehaviour
             ScoreManager.Instance.UpdateBestScore();
             UIManager.Instance.ShowOverPanel();
             UIManager.Instance.ShowOverScoreUI();
-            gameState = GameState.GameOver;
+            SetGameState(GameState.GameOver);
             SaveManager.Instance.ClearSave();
             gridManager.ClearAllPiece();
             return;
         }
         if (MatchSystem.HasPossibleMove(pieces, width, height))
         {
-            gameState = GameState.Playing;
+            SetGameState(GameState.Playing);
         }
         else
         {
