@@ -266,6 +266,42 @@ PrefabInstance:
       propertyPath: m_Name
       value: MatchParticle
       objectReference: {fileID: 0}
+    - target: {fileID: 4380782145038773446, guid: 6d2dc7740e3f76a44ac21d31b3a8b35e, type: 3}
+      propertyPath: InitialModule.size3D
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4380782145038773446, guid: 6d2dc7740e3f76a44ac21d31b3a8b35e, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4380782145038773446, guid: 6d2dc7740e3f76a44ac21d31b3a8b35e, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4380782145038773446, guid: 6d2dc7740e3f76a44ac21d31b3a8b35e, type: 3}
+      propertyPath: InitialModule.startSize.minScalar
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4380782145038773446, guid: 6d2dc7740e3f76a44ac21d31b3a8b35e, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4380782145038773446, guid: 6d2dc7740e3f76a44ac21d31b3a8b35e, type: 3}
+      propertyPath: InitialModule.startSpeed.minScalar
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4380782145038773446, guid: 6d2dc7740e3f76a44ac21d31b3a8b35e, type: 3}
+      propertyPath: InitialModule.startLifetime.minScalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4380782145038773446, guid: 6d2dc7740e3f76a44ac21d31b3a8b35e, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.atime1
+      value: 34155
+      objectReference: {fileID: 0}
+    - target: {fileID: 4380782145038773446, guid: 6d2dc7740e3f76a44ac21d31b3a8b35e, type: 3}
+      propertyPath: InitialModule.startLifetime.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
