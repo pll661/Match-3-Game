@@ -27,9 +27,11 @@ public class Resolver
     {
         //if (matchs.Count <= 0) return;
         //grid.ClearPiece(matchs);
+        int roundIndex = 0;
         while (matchs.Count >= 3)
         {
-            ScoreManager.Instance.AddScore(matchs.Count);
+            roundIndex++;
+            ScoreManager.Instance.AddScore(matchs.Count*roundIndex);
             Sequence clearPiece = grid.ClearPiece(matchs);
             yield return clearPiece.WaitForCompletion();
             grid.RemovePiece(matchs);
