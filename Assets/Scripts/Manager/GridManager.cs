@@ -19,32 +19,34 @@ public class GridManager : MonoBehaviour
 
     private void Awake()
     {
-       
+        pieces = new Piece[width, height];
+        spawn = new SpawnManager(this);
+        resolver = new Resolver(this);
     }
 
     private void Start()
     {
-        spawn = new SpawnManager(this);
-        resolver = new Resolver(this);
+        
+        
     }
     /// <summary>
     /// 初始化网格
     /// </summary>
     public Sequence InitGrid()
     {
-        pieces = new Piece[width, height];
+        //pieces = new Piece[width, height];
         Sequence drop = DOTween.Sequence();
         GameManager.Instance.SetGameState(GameState.Resolving);
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
-                
+
                 PieceType type = GetRandomPieceType(x, y);
                 PieceStyle currentStyle = StyleManager.Instance.GetTypeData(type);
                 Piece p = spawn.SpawnPiece(x, y, PiecePrefab, type, currentStyle);
-                Vector3 startPos = DropSystem.GetWorldPosition(x,y+height*2,width,height,cellSpacing);
-                Vector3 endPos=DropSystem.GetWorldPosition(x, y,width,height,cellSpacing);
+                Vector3 startPos = DropSystem.GetWorldPosition(x, y + height * 2, width, height, cellSpacing);
+                Vector3 endPos = DropSystem.GetWorldPosition(x, y, width, height, cellSpacing);
                 p.transform.position = startPos;
                 //drop.Join(p.transform.DOMove(endPos, 0.35f).SetEase(Ease.OutQuad));
                 float at = 0.35f + Random.Range(0f, 0.2f);
@@ -160,7 +162,7 @@ public class GridManager : MonoBehaviour
                 seq.Join(p2.transform.DOMove(p2Pos, 0.2f).SetEase(Ease.OutQuad));
                 seq.OnComplete(() =>
                 {
-                    GameManager.Instance.OnBoardSettled(pieces,width,height);                  
+                    GameManager.Instance.OnBoardSettled(pieces, width, height);
                     //Debug.Log("结果" + MatchSystem.HasPossibleMove(pieces,width,height));
                 });
             }
@@ -211,7 +213,7 @@ public class GridManager : MonoBehaviour
     }
     public void ClearAllPiece()
     {
-        if (pieces==null) return;
+        if (pieces == null) return;
         foreach (Piece piece in pieces)
         {
             if (piece != null)
@@ -219,15 +221,23 @@ public class GridManager : MonoBehaviour
                 Destroy(piece.gameObject);
             }
         }
-        pieces = null;
+        //pieces = null;
+        //清空piece
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                pieces[x, y] = null;
+            }
+        }
     }
     public bool IsBoardComplete()
     {
-        if (pieces == null)
-        {
-            Debug.Log("找不到pieces！");
-            return false;
-        }
+        //if (pieces == null)
+        //{
+        //    Debug.Log("找不到pieces！");
+        //    return false;
+        //}
 
         for (int x = 0; x < width; x++)
         {
@@ -244,7 +254,15 @@ public class GridManager : MonoBehaviour
     }
     public void LoadData(GameSaveData datas)
     {
-        pieces = new Piece[width, height];
+        //清空piece
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                pieces[x, y] = null;
+            }
+        }
+        //pieces = new Piece[width, height];
         foreach (BoardPieceData data in datas.piecesData)
         {
             PieceStyle currentStyle = StyleManager.Instance.GetTypeData(data.pieceType);

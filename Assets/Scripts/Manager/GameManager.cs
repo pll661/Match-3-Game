@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
+        
         gameState = GameState.MainMenu;
         UIManager.Instance.ShowMainPanel();
     }
